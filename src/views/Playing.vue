@@ -1,13 +1,13 @@
 <template>
   <h3>Puntos: {{ points }}</h3>
   <h2>Time Left: {{ timeLeft }}</h2>
-  
-  <div  v-show="answered">
-      {{ messageScreen }} 
-      The right Answer is: 
-     <b> {{correctProductTitle}} </b>
-     <p> {{correctBookDescription}} </p>
-      <img :src="correctProductImage" />
+
+  <div v-show="answered">
+    {{ messageScreen }}
+    The right Answer is:
+    <b> {{ correctProductTitle }} </b>
+    <p>{{ correctBookDescription }}</p>
+    <img :src="correctProductImage" />
     <button @click="restartBooksAfterAnswer()">Aceptar</button>
   </div>
 
@@ -16,7 +16,8 @@
       v-for="book in books"
       :key="book.id"
       :book="book"
-      :compareBookWithDescription="compareBookWithDescription">
+      :compareBookWithDescription="compareBookWithDescription"
+    >
     </book>
   </div>
 
@@ -26,7 +27,6 @@
     :itemDragStart="itemDragStart"
   >
   </random-description>
-
 </template>
 <script>
 import axios from "axios";
@@ -45,21 +45,21 @@ export default {
       finish: false,
       booksNumberChallenge: 2,
       messageScreen: "",
-      answered: false
+      answered: false,
     });
 
     const booksState = reactive({
       books: [],
       keyWord: "art",
-      queryKeywords:['art','terror','car'],
+      queryKeywords: ["art", "terror", "car","horror","love","war"],
       startIndex: 0,
       maxResults: 40,
     });
 
     const correctBookState = reactive({
       correctBookId: "",
-      correctProductTitle:"",
-      correctProductImage:"",
+      correctProductTitle: "",
+      correctProductImage: "",
       correctBookDescription: "",
     });
 
@@ -70,17 +70,18 @@ export default {
 
     startTime();
 
-
     watch(() => {
-      if (gameState.timeLeft==0) {
+      if (gameState.timeLeft == 0) {
         stopTime();
-        alert('¡¡fin del juego!!');
+        alert("¡¡fin del juego!!");
       }
+
     });
 
     function compareBookWithDescription(bookId) {
       correctBookState.correctBookId == bookId ? answer(true) : answer(false);
-      gameState.answered= true;
+      gameState.answered = true;
+      stopTime();
     }
 
     function answer(type) {
@@ -88,8 +89,9 @@ export default {
         playerState.points++;
         gameState.messageScreen = "Good Answer";
       } else {
-        gameState.messageScreen = "wrong Answer";
+        gameState.messageScreen = "Wrong Answer";
       }
+
     }
     function itemDragStart(which, ev) {
       console.log("itemDragStart La descripción:");
@@ -127,16 +129,19 @@ export default {
     (async () => {
       booksState.books = await getBooks();
       correctBookState.correctBookId = booksState.books[0].id;
-      correctBookState.correctBookDescription = booksState.books[0].volumeInfo.description;
-      correctBookState.correctProductTitle = booksState.books[0].volumeInfo.title;
-      correctBookState.correctProductImage = booksState.books[0].volumeInfo.imageLinks.thumbnail;
+      correctBookState.correctBookDescription =
+        booksState.books[0].volumeInfo.description;
+      correctBookState.correctProductTitle =
+        booksState.books[0].volumeInfo.title;
+      correctBookState.correctProductImage =
+        booksState.books[0].volumeInfo.imageLinks.thumbnail;
     })();
 
     async function getBooks() {
       try {
-        const wordIndex = getRandomInt(0,booksState.queryKeywords.length);
+        const wordIndex = getRandomInt(0, booksState.queryKeywords.length);
         const word = booksState.queryKeywords[wordIndex];
-        //booksState.keyWord   
+        //booksState.keyWord
         const AllBooks = await axios.get(
           `https://www.googleapis.com/books/v1/volumes?q=${word}&startIndex=${booksState.startIndex}&maxResults=${booksState.maxResults}`
         );
@@ -148,7 +153,7 @@ export default {
         console.error(error);
       }
     }
-    
+
     function getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min)) + min;
     }
@@ -156,8 +161,8 @@ export default {
     function haveImageAndDescription(book) {
       if (
         "imageLinks" in book.volumeInfo &&
-        "description" in book.volumeInfo &&
-        book.volumeInfo.language === "en"
+        "description" in book.volumeInfo
+        // && book.volumeInfo.language === "en"
       ) {
         return true;
       } else {
@@ -165,27 +170,65 @@ export default {
       }
     }
 
-function restartBooksAfterAnswer(){
-    (async () => {
-      booksState.books = await getBooks();
-      correctBookState.correctBookId = booksState.books[0].id;
-      correctBookState.correctBookDescription = booksState.books[0].volumeInfo.description;
-      correctBookState.correctProductTitle = booksState.books[0].volumeInfo.title;
-      correctBookState.correctProductImage = booksState.books[0].volumeInfo.imageLinks.thumbnail;
-    })();
-    gameState.answered=false;
-}
+    function restartBooksAfterAnswer() {
+      (async () => {
+        booksState.books = await getBooks();
+        correctBookState.correctBookId = booksState.books[0].id;
+        correctBookState.correctBookDescription =
+          booksState.books[0].volumeInfo.description;
+        correctBookState.correctProductTitle =
+          booksState.books[0].volumeInfo.title;
+        correctBookState.correctProductImage =
+          booksState.books[0].volumeInfo.imageLinks.thumbnail;
+      })();
+      gameState.answered = false;
+      startTime();
+    }
 
     function getRandomElements(array, numberOfElements) {
       const randomElements = [];
-
-      for (let index = 0; index < numberOfElements; index++) {
-        console.log("random");
-        console.log(array[Math.floor(Math.random() * numberOfElements)]);
-        randomElements.push(
-          array[Math.floor(Math.random() * numberOfElements)]
+      console.log("Este es el array total");
+      console.log(array);
+      let index = 0;
+      while (index < numberOfElements) {
+        const i = Math.floor(Math.random() * numberOfElements);
+        console.log("Este es el index");
+        console.log(i);
+        const randomItem = array[i];
+        const exist = randomElements.filter(
+          (element) => element.id == randomItem.id
         );
+        console.log(exist);
+       if (exist.length == 0) {
+          randomElements.push(randomItem);
+          index++;
+        }
+        /*
+         randomElements.push(randomItem);
+          index++;
+          */
       }
+      /*
+      for (let index = 0; index < numberOfElements; index++) {
+        const i = Math.floor(Math.random() * numberOfElements);
+        console.log("Este es el index");
+        console.log(i);
+        const randomItem = array[i];
+
+        
+        const exist = randomElements.filter(
+          (element) => element.id == randomItem.id
+        );
+        console.log("EXISTE UNO REPETIDO");
+        console.log(exist);
+        console.log("Con lenght");
+        console.log(exist.length);
+
+        randomElements.push(randomItem);
+      } */
+
+      console.log("ESTE ES EL RANDOM ");
+      console.log(randomElements);
       return randomElements;
     }
 
