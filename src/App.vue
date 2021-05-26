@@ -1,12 +1,23 @@
 <template>
-  <div id="nav">
+  <!--<div id="nav">
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
-  </div>
+  </div>-->
   <router-view/>
 </template>
 
 <style>
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+  padding: 0px;
+  margin: 0px;
+}
+
+:root{
+  --contrast:#00C59C;
+
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
