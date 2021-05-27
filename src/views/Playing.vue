@@ -1,4 +1,5 @@
 <template>
+
   <h3>Puntos: {{ points }}</h3>
   <h2>Time Left: {{ timeLeft }}</h2>
 
@@ -10,6 +11,9 @@
     <img :src="correctProductImage" />
     <button @click="restartBooksAfterAnswer()">Aceptar</button>
   </div>
+
+
+<div v-show="!answered" class="play-container">
 
   <div class="books-container">
     <book
@@ -27,6 +31,12 @@
     :itemDragStart="itemDragStart"
   >
   </random-description>
+</div>
+
+<end :name="name" :points="points">
+</end>
+
+
 </template>
 <script>
 import axios from "axios";
@@ -34,12 +44,13 @@ import { toRefs, reactive } from "@vue/reactivity";
 import Book from "../components/Book.vue";
 import { watch } from "@vue/runtime-core";
 import RandomDescription from "../components/RandomDescription.vue";
+import End from "../components/End.vue"
 export default {
-  components: { Book, RandomDescription },
+  components: { Book, RandomDescription, End },
   name: "Playing",
   setup() {
     const gameState = reactive({
-      playing: true,
+      end: false,
       timeLeft: 60,
       timeInterval: "",
       finish: false,
@@ -51,7 +62,7 @@ export default {
     const booksState = reactive({
       books: [],
       keyWord: "art",
-      queryKeywords: ["art", "terror", "car","horror","love","war"],
+      queryKeywords: ["art", "terror", "car","horror","love","war","king"],
       startIndex: 0,
       maxResults: 40,
     });
@@ -65,7 +76,7 @@ export default {
 
     const playerState = reactive({
       points: 0,
-      name: "",
+      name: "Arturo",
     });
 
     startTime();
@@ -180,9 +191,10 @@ export default {
           booksState.books[0].volumeInfo.title;
         correctBookState.correctProductImage =
           booksState.books[0].volumeInfo.imageLinks.thumbnail;
-      })();
       gameState.answered = false;
       startTime();
+      })();
+  
     }
 
     function getRandomElements(array, numberOfElements) {
@@ -203,29 +215,7 @@ export default {
           randomElements.push(randomItem);
           index++;
         }
-        /*
-         randomElements.push(randomItem);
-          index++;
-          */
       }
-      /*
-      for (let index = 0; index < numberOfElements; index++) {
-        const i = Math.floor(Math.random() * numberOfElements);
-        console.log("Este es el index");
-        console.log(i);
-        const randomItem = array[i];
-
-        
-        const exist = randomElements.filter(
-          (element) => element.id == randomItem.id
-        );
-        console.log("EXISTE UNO REPETIDO");
-        console.log(exist);
-        console.log("Con lenght");
-        console.log(exist.length);
-
-        randomElements.push(randomItem);
-      } */
 
       console.log("ESTE ES EL RANDOM ");
       console.log(randomElements);
