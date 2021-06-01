@@ -1,7 +1,10 @@
 # bookmatcher
 Book Matcher is a funny game where the user will look two random books and one description, from the GOOGLE Books API, and have to drag and drop that description in the correct book to win points. 
 
-The app is being developed with Vue 3(Composition API), Axios and Bulma. 
+The app is being developed with: 
+-Vue 3(Composition API).
+-Axios.
+-Bulma. 
 
 
 # TODOS
