@@ -13,3 +13,18 @@ export default {
   },
 };
 </script>
+<style scoped>
+.descripton{
+  background-color: var(--white);
+  color: var(--black);
+  cursor: -webkit-grab; 
+  cursor: grab;
+}
+
+.descripton:active {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+</style>

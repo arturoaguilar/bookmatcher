@@ -16,6 +16,10 @@ html {
 
 :root{
   --contrast:#00C59C;
+  --primary:#A4A5FF;
+  --secundary:#FFD372;
+  --black:#464555;
+  --white:#E6F4F1;
 
 }
 #app {
